@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/default.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        #markdown-output {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        pre {
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Markdown Converter</h1>
+    <div id="markdown-output"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.1.3/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+    <script>
+        // Sample Markdown content loaded from input.md
+        const markdownContent = `Hello world!\n\nThis is a test markdown file.\n\nImportant:\n- Embed all image attachments directly in index.html using <img src=\"data:image/png;base64,...\"> if required and donot add anything extra for the base64 code(like using frnces ///,\`\`,etc)`;
+
+        // Convert Markdown to HTML
+        const htmlContent = marked(markdownContent);
+        document.getElementById('markdown-output').innerHTML = htmlContent;
+
+        // Highlight code blocks in the generated HTML
+        hljs.highlightAll();
+
+        // Check requirements
+        console.assert(!!document.querySelector("script[src*='marked']"), "Marked.js is not loaded.");
+        console.assert(!!document.querySelector("script[src*='highlight.js']"), "Highlight.js is not loaded.");
+        console.assert(document.querySelector("#markdown-output").innerHTML.includes("<h"), "Output does not include HTML header.");
+    </script>
+</body>
+</html>
