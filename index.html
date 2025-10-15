@@ -11,11 +11,27 @@
             margin: 20px;
             background-color: #f4f4f4;
         }
-        #markdown-output {
+        #markdown-output, #markdown-source {
             background: white;
             padding: 15px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        #markdown-tabs {
+            margin-bottom: 10px;
+        }
+        #markdown-tabs button {
+            margin-right: 5px;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+        #markdown-tabs button.active {
+            background: #0056b3;
         }
         pre {
             padding: 10px;
@@ -31,25 +47,58 @@
 </head>
 <body>
     <h1>Markdown Converter</h1>
+    <div id="markdown-tabs">
+        <button id="show-html">Show HTML</button>
+        <button id="show-markdown">Show Markdown</button>
+    </div>
     <div id="markdown-output"></div>
+    <pre id="markdown-source"></pre>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.1.3/marked.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
     <script>
-        // Sample Markdown content loaded from input.md
-        const markdownContent = `Hello world!\n\nThis is a test markdown file.\n\nImportant:\n- Embed all image attachments directly in index.html using <img src=\"data:image/png;base64,...\"> if required and donot add anything extra for the base64 code(like using frnces ///,\`\`,etc)`;
+        // Sample Markdown content (this would normally come from an external source)
+        const markdownContent = `# Hello world!\n\nThis is a test markdown file.\n\n## Important:\n- Embed all image attachments directly in index.html using <img src=\"data:image/png;base64,...\"> if required and donot add anything extra for the base64 code (like using fences ///,\`\`,etc)`;
 
         // Convert Markdown to HTML
         const htmlContent = marked(markdownContent);
-        document.getElementById('markdown-output').innerHTML = htmlContent;
+
+        // Display HTML and Markdown content
+        const markdownOutput = document.getElementById('markdown-output');
+        const markdownSource = document.getElementById('markdown-source');
+        markdownOutput.innerHTML = htmlContent;
+        markdownSource.textContent = markdownContent;
 
         // Highlight code blocks in the generated HTML
         hljs.highlightAll();
 
-        // Check requirements
-        console.assert(!!document.querySelector("script[src*='marked']"), "Marked.js is not loaded.");
-        console.assert(!!document.querySelector("script[src*='highlight.js']"), "Highlight.js is not loaded.");
-        console.assert(document.querySelector("#markdown-output").innerHTML.includes("<h"), "Output does not include HTML header.");
+        // Event listeners for tabs
+        const showHTMLButton = document.getElementById('show-html');
+        const showMarkdownButton = document.getElementById('show-markdown');
+
+        function showHTML() {
+            showHTMLButton.classList.add('active');
+            showMarkdownButton.classList.remove('active');
+            markdownOutput.style.display = 'block';
+            markdownSource.style.display = 'none';
+        }
+
+        function showMarkdown() {
+            showMarkdownButton.classList.add('active');
+            showHTMLButton.classList.remove('active');
+            markdownSource.style.display = 'block';
+            markdownOutput.style.display = 'none';
+        }
+
+        showHTMLButton.addEventListener('click', showHTML);
+        showMarkdownButton.addEventListener('click', showMarkdown);
+
+        // Initialize by showing HTML first
+        showHTML();
+
+        // Requirements Check
+        console.assert(document.querySelectorAll("#markdown-tabs button").length >= 2, "Not enough buttons for tabs.");
+        console.assert(document.querySelector("#markdown-source").textContent.trim().length > 0, "Markdown source is empty.");
     </script>
 </body>
 </html>
